@@ -7,7 +7,7 @@ import java.time.temporal.TemporalAccessor;
 
 @Entity
 @Table(name = "post")
-public class Post {
+public class PostDb {
 
     @Id
     @Column(name = "post_id")

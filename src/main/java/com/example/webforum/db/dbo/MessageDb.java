@@ -7,7 +7,7 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "message")
-public class Message {
+public class MessageDb {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "message_id")
