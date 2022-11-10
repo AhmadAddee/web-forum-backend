@@ -1,9 +1,13 @@
 package com.example.webforum.business;
 
+import java.util.List;
+
 public class User {
     private String username;
     private String fullName;
     private int age;
+    private String password;
+    private List<Post> posts;
 
     public String getUsername() {
         return username;
@@ -29,12 +33,30 @@ public class User {
         this.age = age;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public List<Post> getPostList() {
+        return posts;
+    }
+
+    public void setPostList(List<Post> posts) {
+        this.posts = posts;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                "username='" + username + '\'' +
                ", fullName='" + fullName + '\'' +
                ", age=" + age +
+               ", password='" + password + '\'' +
+               ", posts=" + posts +
                '}';
     }
 }

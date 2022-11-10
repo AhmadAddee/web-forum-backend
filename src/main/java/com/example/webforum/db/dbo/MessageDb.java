@@ -1,3 +1,5 @@
+/*
+
 package com.example.webforum.db.dbo;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -16,67 +18,76 @@ public class MessageDb {
     private Date sentDate;
     @Column(name = "message_content")
     private String content;
-    /** TODO: join all messages received by a specific user to that user.
-     */
-    /*
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "sender", referencedColumnName = "username")
-    @JsonIgnoreProperties("myMessages")
-    private User sender;
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "receiver", referencedColumnName = "username")
-    @JsonIgnoreProperties("myMessages")
-    private User receiver;
-    */
+    // TODO: join all messages received by a specific user to that user.
 
-    public int getId() {
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.CascadeType;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+@JoinColumn(name = "sender", referencedColumnName = "username")
+@JsonIgnoreProperties("myMessages")
+private UserDb sender;
+@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+@JoinColumn(name = "receiver", referencedColumnName = "username")
+@JsonIgnoreProperties("myMessages")
+private UserDb receiver;
+
+
+public int getId() {
         return id;
-    }
+        }
 
-    public void setId(int id) {
+public void setId(int id) {
         this.id = id;
-    }
+        }
 
-    public Date getSentDate() {
+public Date getSentDate() {
         return sentDate;
-    }
+        }
 
-    public void setSentDate(Date sentDate) {
+public void setSentDate(Date sentDate) {
         this.sentDate = sentDate;
-    }
+        }
 
-    public String getContent() {
+public String getContent() {
         return content;
-    }
+        }
 
-    public void setContent(String content) {
+public void setContent(String content) {
         this.content = content;
-    }
-/*
-    public User getSender() {
+        }
+
+public UserDb getSender() {
         return sender;
-    }
+        }
 
-    public void setSender(User sender) {
+public void setSender(UserDb sender) {
         this.sender = sender;
-    }
+        }
 
-    public User getReceiver() {
+public UserDb getReceiver() {
         return receiver;
-    }
+        }
 
-    public void setReceiver(User receiver) {
+public void setReceiver(UserDb receiver) {
         this.receiver = receiver;
-    }
-*/
-    @Override
-    public String toString() {
-        return "Message{" +
-               "id=" + id +
-               ", sentDate=" + sentDate +
-               ", content='" + content + '\'' +
-         //      ", sender='" + sender + '\'' +
-         //      ", receiver='" + receiver + '\'' +
-               '}';
-    }
-}
+        }
+
+@Override
+public String toString() {
+        return "MessageDb{" +
+        "id=" + id +
+        ", sentDate=" + sentDate +
+        ", content='" + content + '\'' +
+        ", sender=" + sender +
+        ", receiver=" + receiver +
+        '}';
+        }
+        }
+
+ */

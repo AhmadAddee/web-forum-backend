@@ -2,38 +2,29 @@ package com.example.webforum.business;
 
 import java.util.Date;
 
-/**
- * Nothing more than a DTO that is an amalgamation of the two entities User and Post.
- * */
-
 public class Post {
-    private int postId;
-    private String creatorName;
-    private String postContent;
+    private int id;
     private Date createdDate;
+    private String content;
+    private String creator;
+    private String timeAgo;
 
-    public int getPostId() {
-        return postId;
+    public Post(){}
+
+    public int getId() {
+        return id;
     }
 
-    public void setPostId(int postId) {
-        this.postId = postId;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public String getCreatorName() {
-        return creatorName;
+    public String getContent() {
+        return content;
     }
 
-    public void setCreatorName(String creatorName) {
-        this.creatorName = creatorName;
-    }
-
-    public String getPostContent() {
-        return postContent;
-    }
-
-    public void setPostContent(String postContent) {
-        this.postContent = postContent;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Date getCreatedDate() {
@@ -44,13 +35,29 @@ public class Post {
         this.createdDate = createdDate;
     }
 
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public String getTimeAgo() {
+        return timeAgo;
+    }
+
+    public void setTimeAgo(String timeAgo) {
+        this.timeAgo = timeAgo;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
-               "postId=" + postId +
-               ", creatorName='" + creatorName + '\'' +
-               ", postContent='" + postContent + '\'' +
+               ", postContent='" + content + '\'' +
                ", createdDate=" + createdDate +
+               ", creator=" + creator +
+               timeAgo +
                '}';
     }
 }

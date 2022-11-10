@@ -1,30 +1,31 @@
 package com.example.webforum.db.dbo;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import javax.persistence.*;
-import java.sql.Date;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "post")
-public class PostDb {
+public class PostDb implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "post_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
     @Column(name = "created_date")
-    private Date createdDate;
+    private Timestamp createdDate;
+
     @Column(name = "content")
     private String content;
-    /** TODO: join all posts made by a user to that specific user.
-     */
-    /*
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "creator", referencedColumnName = "username")
-    @JsonIgnoreProperties("posts")
-    private User creator;
-   */
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator", updatable = false)
+    @Fetch(FetchMode.JOIN)
+    private UserDb creator;
 
     public int getId() {
         return id;
@@ -34,11 +35,11 @@ public class PostDb {
         this.id = id;
     }
 
-    public Date getCreatedDate() {
+    public Timestamp getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Timestamp createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -50,22 +51,12 @@ public class PostDb {
         this.content = content;
     }
 
-    /*
-    public User getCreator() {
+    public UserDb getCreator() {
         return creator;
     }
 
-    public void setCreator(User creator) {
+    public void setCreator(UserDb creator) {
         this.creator = creator;
     }
-     */
-    @Override
-    public String toString() {
-        return "Post{" +
-               "id=" + id +
-               //        ", creator=" + creator.toString() +
-               ", createdDate=" + createdDate +
-               ", content='" + content + '\'' +
-               '}';
-    }
+
 }
