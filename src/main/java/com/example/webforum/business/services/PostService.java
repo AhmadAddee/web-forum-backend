@@ -1,7 +1,13 @@
-package com.example.webforum.business;
+package com.example.webforum.business.services;
 
+import com.example.webforum.business.IPostService;
+import com.example.webforum.business.bo.Message;
+import com.example.webforum.business.bo.Post;
+import com.example.webforum.business.bo.User;
+import com.example.webforum.db.dbo.MessageDb;
 import com.example.webforum.db.dbo.PostDb;
 import com.example.webforum.db.dbo.UserDb;
+import com.example.webforum.db.repositories.MessageRepository;
 import com.example.webforum.db.repositories.PostRepository;
 import com.example.webforum.db.repositories.UserRepository;
 import com.example.webforum.util.DateUtils;
@@ -12,7 +18,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostService implements IPostService {
@@ -20,10 +25,13 @@ public class PostService implements IPostService {
     private final PostRepository postRepository;
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private final MessageRepository messageRepository;
 
-    protected PostService(PostRepository postRepository, UserRepository userRepository) {
+    protected PostService(PostRepository postRepository, UserRepository userRepository, MessageRepository messageRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
+        this.messageRepository = messageRepository;
     }
 
     @Override
@@ -91,6 +99,50 @@ public class PostService implements IPostService {
         return "Added successfully";
     }
 
+    @Override
+    public String sendMessage(Message message) {
+        java.util.Date now = new Date();
+        Timestamp timestamp = new Timestamp(now.getTime());
+        UserDb sender = userRepository.getByUsername(message.getSender());
+        UserDb receiver = userRepository.getByUsername(message.getReceiver());
+        MessageDb messageDb = new MessageDb();
+        messageDb.setSentDate(timestamp);
+        messageDb.setContent(message.getContent());
+        messageDb.setReceiver(receiver);
+        messageDb.setSender(sender);
+        messageRepository.save(messageDb);
+        return "Successfully added!";
+    }
+
+    @Override
+    public Message getMessageById(int id) {
+        MessageDb messageDb = messageRepository.findById(id);
+        Message message = new Message();
+        message.setId(messageDb.getId());
+        message.setSentDate(new Date(messageDb.getSentDate().getTime()));
+        message.setContent(messageDb.getContent());
+        message.setReceiver(messageDb.getReceiver().getUsername());
+        message.setSender(messageDb.getSender().getUsername());
+        return message;
+    }
+
+    @Override
+    public List<Message> findMessageByReceiver(String receiver) {
+        UserDb receiverDb = userRepository.getByUsername(receiver);
+        List<Message> messages = new ArrayList<>();
+        Iterable<MessageDb> messageDbs = messageRepository.findMessageByReceiver(receiverDb);
+        messageDbs.forEach(messageDb -> {
+            Message message = new Message();
+            message.setId(messageDb.getId());
+            message.setSentDate(new Date(messageDb.getSentDate().getTime()));
+            message.setContent(messageDb.getContent());
+            message.setReceiver(messageDb.getReceiver().getUsername());
+            message.setSender(messageDb.getSender().getUsername());
+            messages.add(message);
+        });
+        return messages;
+    }
+
     private Post postDbToPost(PostDb postDb) {
         Post post =  new Post();
             post.setId(postDb.getId());
@@ -109,7 +161,7 @@ public class PostService implements IPostService {
 
         PostDb postDb = new PostDb();
         postDb.setContent(post.getContent());
-        postDb.setCreatedDate( timestamp);
+        postDb.setCreatedDate(timestamp);
         return postDb;
     }
 

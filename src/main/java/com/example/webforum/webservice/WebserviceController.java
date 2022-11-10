@@ -1,8 +1,9 @@
 package com.example.webforum.webservice;
 
 import com.example.webforum.business.IPostService;
-import com.example.webforum.business.Post;
-import com.example.webforum.business.User;
+import com.example.webforum.business.bo.Message;
+import com.example.webforum.business.bo.Post;
+import com.example.webforum.business.bo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -51,5 +52,21 @@ public class WebserviceController {
     @ResponseStatus(HttpStatus.CREATED)
     public String AddUser(@RequestBody User user) {
         return this.postService.addUser(user);
+    }
+
+    @PostMapping("/message")
+    @ResponseStatus(HttpStatus.CREATED)
+    public String sendMessage(@RequestBody Message message) {
+        return this.postService.sendMessage(message);
+    }
+
+    @GetMapping("/message")
+    public Message getMessageById(@RequestParam(value = "id", required = false)int id) {
+        return this.postService.getMessageById(id);
+    }
+
+    @GetMapping("/messages")
+    public List<Message> getMyInbox(@RequestParam(value = "username", required = false)String username) {
+        return this.postService.findMessageByReceiver(username);
     }
 }

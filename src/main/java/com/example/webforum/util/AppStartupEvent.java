@@ -2,6 +2,7 @@ package com.example.webforum.util;
 
 import com.example.webforum.business.IPostService;
 import com.example.webforum.db.dbo.PostDb;
+import com.example.webforum.db.repositories.MessageRepository;
 import com.example.webforum.db.repositories.PostRepository;
 import com.example.webforum.db.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +21,16 @@ public class AppStartupEvent implements ApplicationListener<ApplicationReadyEven
     private final UserRepository userRepository;
     @Autowired
     private final PostRepository postRepository;
+    @Autowired
+    private final MessageRepository messageRepository;
 
+    //private final IPostService postService;
 
-    private final IPostService postService;
-
-    public AppStartupEvent(UserRepository userRepository, PostRepository postRepository, IPostService postService) {
+    public AppStartupEvent(UserRepository userRepository, PostRepository postRepository, MessageRepository messageRepository) {
         this.userRepository = userRepository;
         this.postRepository = postRepository;
-        this.postService = postService;
+        this.messageRepository = messageRepository;
+        //this.postService = postService;
     }
 
     // TEST

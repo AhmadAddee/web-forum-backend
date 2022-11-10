@@ -26,6 +26,9 @@ public class UserDb implements Serializable {
     @OneToMany(targetEntity = PostDb.class, mappedBy = "creator", fetch = FetchType.LAZY)
     private List<PostDb> postDbList;
 
+    @OneToMany(targetEntity = MessageDb.class, mappedBy = "receiver", fetch = FetchType.LAZY)
+    private List<MessageDb> myInBox;
+
     public String getUsername() {
         return username;
     }
@@ -64,5 +67,13 @@ public class UserDb implements Serializable {
 
     public void setPostDbList(List<PostDb> postDbList) {
         this.postDbList = postDbList;
+    }
+
+    public List<MessageDb> getMyInBox() {
+        return myInBox;
+    }
+
+    public void setMyInBox(List<MessageDb> myInBox) {
+        this.myInBox = myInBox;
     }
 }

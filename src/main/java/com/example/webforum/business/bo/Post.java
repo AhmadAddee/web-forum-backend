@@ -1,4 +1,4 @@
-package com.example.webforum.business;
+package com.example.webforum.business.bo;
 
 import java.util.Date;
 

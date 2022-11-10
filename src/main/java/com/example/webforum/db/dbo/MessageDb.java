@@ -1,93 +1,75 @@
-/*
-
 package com.example.webforum.db.dbo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "message")
-public class MessageDb {
+public class MessageDb implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "message_id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+
     @Column(name = "sent_date")
-    private Date sentDate;
+    private Timestamp sentDate;
+
     @Column(name = "message_content")
     private String content;
-    // TODO: join all messages received by a specific user to that user.
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "receiver", updatable = false)
+    @Fetch(FetchMode.JOIN)
+    private UserDb receiver;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "sender", updatable = false)
+    @Fetch(FetchMode.JOIN)
+    private UserDb sender;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-@JoinColumn(name = "sender", referencedColumnName = "username")
-@JsonIgnoreProperties("myMessages")
-private UserDb sender;
-@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-@JoinColumn(name = "receiver", referencedColumnName = "username")
-@JsonIgnoreProperties("myMessages")
-private UserDb receiver;
-
-
-public int getId() {
+    public int getId() {
         return id;
-        }
+    }
 
-public void setId(int id) {
+    public void setId(int id) {
         this.id = id;
-        }
+    }
 
-public Date getSentDate() {
+    public Timestamp getSentDate() {
         return sentDate;
-        }
+    }
 
-public void setSentDate(Date sentDate) {
+    public void setSentDate(Timestamp sentDate) {
         this.sentDate = sentDate;
-        }
+    }
 
-public String getContent() {
+    public String getContent() {
         return content;
-        }
+    }
 
-public void setContent(String content) {
+    public void setContent(String content) {
         this.content = content;
-        }
+    }
 
-public UserDb getSender() {
+    public UserDb getSender() {
         return sender;
-        }
+    }
 
-public void setSender(UserDb sender) {
+    public void setSender(UserDb sender) {
         this.sender = sender;
-        }
+    }
 
-public UserDb getReceiver() {
+    public UserDb getReceiver() {
         return receiver;
-        }
+    }
 
-public void setReceiver(UserDb receiver) {
+    public void setReceiver(UserDb receiver) {
         this.receiver = receiver;
-        }
-
-@Override
-public String toString() {
-        return "MessageDb{" +
-        "id=" + id +
-        ", sentDate=" + sentDate +
-        ", content='" + content + '\'' +
-        ", sender=" + sender +
-        ", receiver=" + receiver +
-        '}';
-        }
-        }
-
- */
+    }
+}
