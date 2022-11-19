@@ -16,4 +16,5 @@ public interface IPostService {
     String sendMessage(Message message);
     Message getMessageById(int id);
     List<Message> findMessageByReceiver(String receiver);
+    User logIn(User user);
 }

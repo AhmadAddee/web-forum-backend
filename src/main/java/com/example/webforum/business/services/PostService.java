@@ -86,9 +86,9 @@ public class PostService implements IPostService {
     public String addUser(User user) {
         if (user.getUsername() == null || user.getFullName() == null ||
             user.getAge() == 0 || user.getPassword() == null)
-            return "User Cannot be null";
+            return null;
         else if (this.userRepository.getByUsername(user.getUsername()) != null)
-            return "Username is taken, try with another one!";
+            return null;
         UserDb userDb = new UserDb();
         userDb.setUsername(user.getUsername());
         userDb.setFull_name(user.getFullName());
@@ -96,7 +96,7 @@ public class PostService implements IPostService {
         userDb.setPassword(user.getPassword());
         userDb.setPostDbList(new ArrayList<>());
         this.userRepository.save(userDb);
-        return "Added successfully";
+        return user.getUsername();
     }
 
     @Override
@@ -120,6 +120,7 @@ public class PostService implements IPostService {
         Message message = new Message();
         message.setId(messageDb.getId());
         message.setSentDate(new Date(messageDb.getSentDate().getTime()));
+        message.setTimeAgo(DateUtils.calculateTimeAgo(message.getSentDate()));
         message.setContent(messageDb.getContent());
         message.setReceiver(messageDb.getReceiver().getUsername());
         message.setSender(messageDb.getSender().getUsername());
@@ -135,12 +136,21 @@ public class PostService implements IPostService {
             Message message = new Message();
             message.setId(messageDb.getId());
             message.setSentDate(new Date(messageDb.getSentDate().getTime()));
+            message.setTimeAgo(DateUtils.calculateTimeAgo(message.getSentDate()));
             message.setContent(messageDb.getContent());
             message.setReceiver(messageDb.getReceiver().getUsername());
             message.setSender(messageDb.getSender().getUsername());
             messages.add(message);
         });
         return messages;
+    }
+
+    @Override
+    public User logIn(User user) {
+        if (user == null)
+            throw new RuntimeException("Post cannot be null");
+        UserDb userDb = this.userRepository.getByUsername(user.getUsername());
+        return userDb == null? null : userDb.getPassword().equals(user.getPassword())? userDbToUser(userDb) : null;
     }
 
     private Post postDbToPost(PostDb postDb) {

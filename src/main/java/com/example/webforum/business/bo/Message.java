@@ -8,6 +8,7 @@ public class Message {
     private String content;
     private String sender;
     private String receiver;
+    private String timeAgo;
 
     public Message() {
     }
@@ -52,6 +53,14 @@ public class Message {
         this.receiver = receiver;
     }
 
+    public String getTimeAgo() {
+        return timeAgo;
+    }
+
+    public void setTimeAgo(String timeAgo) {
+        this.timeAgo = timeAgo;
+    }
+
     @Override
     public String toString() {
         return "Message{" +
@@ -60,6 +69,7 @@ public class Message {
                ", content='" + content + '\'' +
                ", sender='" + sender + '\'' +
                ", receiver='" + receiver + '\'' +
+               ", timeAgo='" + timeAgo + '\'' +
                '}';
     }
 }

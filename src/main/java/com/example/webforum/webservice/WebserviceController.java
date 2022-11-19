@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class WebserviceController {
     //private final DateUtils dateUtils;
     @Autowired
@@ -52,6 +53,12 @@ public class WebserviceController {
     @ResponseStatus(HttpStatus.CREATED)
     public String AddUser(@RequestBody User user) {
         return this.postService.addUser(user);
+    }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.CREATED)
+    public User Login(@RequestBody User user) {
+        return this.postService.logIn(user);
     }
 
     @PostMapping("/message")
