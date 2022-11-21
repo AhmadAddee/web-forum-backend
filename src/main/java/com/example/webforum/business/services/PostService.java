@@ -25,13 +25,10 @@ public class PostService implements IPostService {
     private final PostRepository postRepository;
     @Autowired
     private final UserRepository userRepository;
-    @Autowired
-    private final MessageRepository messageRepository;
 
-    protected PostService(PostRepository postRepository, UserRepository userRepository, MessageRepository messageRepository) {
+    protected PostService(PostRepository postRepository, UserRepository userRepository) {
         this.postRepository = postRepository;
         this.userRepository = userRepository;
-        this.messageRepository = messageRepository;
     }
 
     @Override
@@ -43,14 +40,6 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public List<User> getUsers() {
-        Iterable<UserDb> userDbs = this.userRepository.findAll();
-        List<User> userList = new ArrayList<>();
-        userDbs.forEach(userDb -> userList.add(userDbToUser(userDb)));
-        return userList;
-    }
-
-    @Override
     public List<Post> getPostByCreator(String creator){
         UserDb userDb = this.userRepository.getByUsername(creator);
         if (userDb == null) return null;
@@ -58,14 +47,6 @@ public class PostService implements IPostService {
         List<Post> postList = new ArrayList<>();
         postDbs.forEach(postDb -> postList.add(postDbToPost(postDb)));
         return postList;
-    }
-
-    @Override
-    public User getUserByUsername(String username) {
-        if (username == null)
-            throw new RuntimeException("Post cannot be null");
-        UserDb userDb = this.userRepository.getByUsername(username);
-        return userDb != null? userDbToUser(userDb) : null;
     }
 
     @Override
@@ -80,77 +61,6 @@ public class PostService implements IPostService {
 
         this.postRepository.save(postDb);
         return "Created successfully!";
-    }
-
-    @Override
-    public String addUser(User user) {
-        if (user.getUsername() == null || user.getFullName() == null ||
-            user.getAge() == 0 || user.getPassword() == null)
-            return null;
-        else if (this.userRepository.getByUsername(user.getUsername()) != null)
-            return null;
-        UserDb userDb = new UserDb();
-        userDb.setUsername(user.getUsername());
-        userDb.setFull_name(user.getFullName());
-        userDb.setAge(user.getAge());
-        userDb.setPassword(user.getPassword());
-        userDb.setPostDbList(new ArrayList<>());
-        this.userRepository.save(userDb);
-        return user.getUsername();
-    }
-
-    @Override
-    public String sendMessage(Message message) {
-        java.util.Date now = new Date();
-        Timestamp timestamp = new Timestamp(now.getTime());
-        UserDb sender = userRepository.getByUsername(message.getSender());
-        UserDb receiver = userRepository.getByUsername(message.getReceiver());
-        MessageDb messageDb = new MessageDb();
-        messageDb.setSentDate(timestamp);
-        messageDb.setContent(message.getContent());
-        messageDb.setReceiver(receiver);
-        messageDb.setSender(sender);
-        messageRepository.save(messageDb);
-        return "Successfully added!";
-    }
-
-    @Override
-    public Message getMessageById(int id) {
-        MessageDb messageDb = messageRepository.findById(id);
-        Message message = new Message();
-        message.setId(messageDb.getId());
-        message.setSentDate(new Date(messageDb.getSentDate().getTime()));
-        message.setTimeAgo(DateUtils.calculateTimeAgo(message.getSentDate()));
-        message.setContent(messageDb.getContent());
-        message.setReceiver(messageDb.getReceiver().getUsername());
-        message.setSender(messageDb.getSender().getUsername());
-        return message;
-    }
-
-    @Override
-    public List<Message> findMessageByReceiver(String receiver) {
-        UserDb receiverDb = userRepository.getByUsername(receiver);
-        List<Message> messages = new ArrayList<>();
-        Iterable<MessageDb> messageDbs = messageRepository.findMessageByReceiver(receiverDb);
-        messageDbs.forEach(messageDb -> {
-            Message message = new Message();
-            message.setId(messageDb.getId());
-            message.setSentDate(new Date(messageDb.getSentDate().getTime()));
-            message.setTimeAgo(DateUtils.calculateTimeAgo(message.getSentDate()));
-            message.setContent(messageDb.getContent());
-            message.setReceiver(messageDb.getReceiver().getUsername());
-            message.setSender(messageDb.getSender().getUsername());
-            messages.add(message);
-        });
-        return messages;
-    }
-
-    @Override
-    public User logIn(User user) {
-        if (user == null)
-            throw new RuntimeException("Post cannot be null");
-        UserDb userDb = this.userRepository.getByUsername(user.getUsername());
-        return userDb == null? null : userDb.getPassword().equals(user.getPassword())? userDbToUser(userDb) : null;
     }
 
     private Post postDbToPost(PostDb postDb) {
@@ -168,21 +78,9 @@ public class PostService implements IPostService {
         java.util.Date now = new Date();
         Timestamp timestamp = new Timestamp(now.getTime());
 
-
         PostDb postDb = new PostDb();
         postDb.setContent(post.getContent());
         postDb.setCreatedDate(timestamp);
         return postDb;
-    }
-
-    private User userDbToUser(UserDb userDb) {
-        User user = new User();
-        user.setUsername(userDb.getUsername());
-        user.setFullName(userDb.getFull_name());
-        user.setAge(userDb.getAge());
-        user.setPassword(userDb.getPassword());
-        user.setPostList(new ArrayList<>());
-        userDb.getPostDbList().forEach(postDb -> user.getPostList().add(postDbToPost(postDb)));
-        return user;
     }
 }
