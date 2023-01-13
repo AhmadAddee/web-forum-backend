@@ -36,8 +36,9 @@ public class UserContoller {
     }
 
     @PostMapping("/login")
-    @ResponseStatus(HttpStatus.CREATED)
+    //@ResponseStatus(HttpStatus.CREATED)
     public User Login(@RequestBody User user) {
+        System.out.println(user);
         return this.iUserService.logIn(user);
     }
 
